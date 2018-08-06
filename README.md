@@ -1,4 +1,4 @@
-# qq
+# wechat
 
 ## Project setup
 ```
