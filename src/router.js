@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import List from './views/List.vue'
 import Mail from './views/Mail.vue'
+import Find from './views/Find.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
         {
           path:"mail",
           component:Mail
+        },
+        {
+          path:"find",
+          component:Find
         }
       ]
     },

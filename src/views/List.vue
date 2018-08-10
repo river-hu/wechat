@@ -14,6 +14,8 @@
                     </div>
                 </van-row>
           </v-touch>
+
+          
    
 
       </div>
@@ -40,7 +42,7 @@ export default {
     }
   }
 };
-</script>
+</script> 
 
 
 <style scoped>
@@ -98,6 +100,7 @@ export default {
   right: -2rem;
   border-bottom: 1px solid rgb(217, 217, 217);
   font-size: 0.65rem;
+  transition: all .3s linear;
 }
 </style>
 

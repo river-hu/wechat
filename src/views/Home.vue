@@ -43,7 +43,7 @@ export default {
           this.$router.push("/home/mail");
           break;
         case 2:
-          this.$router.push("/home/list");
+          this.$router.push("/home/find");
           break;
         case 3:
           this.$router.push("/home/list");
@@ -52,7 +52,20 @@ export default {
     }
   },
   created() {
-    console.log(this.$router)
+     switch (this.$route.path) {
+        case "/home/list":
+          this.active = 0;
+          break;
+        case "/home/mail":
+           this.active = 1;
+          break;
+        case "/home/find":
+          this.active = 2;
+          break;
+        case 3:
+          this.$router.push("/home/list");
+          break;
+      }
   },
 };
 </script>
