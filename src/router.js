@@ -3,38 +3,39 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import List from './views/List.vue'
 import Mail from './views/Mail.vue'
-import Find from './views/Find.vue'
+import About from './views/About.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/home',  
-      name: 'home',
-      component: Home,
-      children:[
-        {
-          path:"list",
-          component:List
-        },
-        {
-          path:"mail",
-          component:Mail
-        },
-        {
-          path:"find",
-          component:Find
-        }
-      ]
+    { 
+      path: '/',  
+      component: Home, 
+      redirect: () => {
+       return {
+          path:"/home/list"
+       }
+      }
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/home',
+      name: 'home',
+      component: Home,
+      children: [
+        {
+          path: "list",
+          component: List
+        },
+        {
+          path: "mail",
+          component: Mail
+        },
+        {
+          path: "about",
+          component: About
+        }
+      ]
     }
   ]
 })

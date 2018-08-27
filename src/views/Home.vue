@@ -16,7 +16,6 @@
       <van-tabbar-item icon="idcard" dot>
         联系人 
       </van-tabbar-item>
-      <van-tabbar-item icon="browsing-history" info="5">发现</van-tabbar-item>
       <van-tabbar-item icon="contact" >我的</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -43,10 +42,7 @@ export default {
           this.$router.push("/home/mail");
           break;
         case 2:
-          this.$router.push("/home/find");
-          break;
-        case 3:
-          this.$router.push("/home/list");
+          this.$router.push("/home/about");
           break;
       }
     }
@@ -62,9 +58,12 @@ export default {
         case "/home/find":
           this.active = 2;
           break;
-        case 3:
-          this.$router.push("/home/list");
-          break;
+        // case "/home":
+        //   this.$router.push("/home/list");
+        //   break;
+        //  case "/":
+        //   this.$router.push("/home/list");
+        //   break;
       }
   },
 };
