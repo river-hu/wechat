@@ -36,6 +36,11 @@ export default new Router({
           component: About
         }
       ]
+    },
+    {
+      path:"/msg",
+      name:'msg',
+      component: ()=>import('./views/Msg.vue')
     }
   ]
 })

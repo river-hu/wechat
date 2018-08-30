@@ -8,17 +8,20 @@
         </div>
       </div>
       <router-view></router-view>
-      <van-tabbar v-model="active">
       
-      <van-tabbar-item icon="chat" info="20">
+ <van-tabbar v-model="active">
+      
+      <van-tabbar-item to="/home/list"	 icon="chat" info="20">
         消息
       </van-tabbar-item>
-      <van-tabbar-item icon="idcard" dot>
+      <van-tabbar-item to="/home/mail" icon="idcard" dot>
         联系人 
       </van-tabbar-item>
-      <van-tabbar-item icon="contact" >我的</van-tabbar-item>
+      <van-tabbar-item to="/home/about" icon="contact" >我的</van-tabbar-item>
     </van-tabbar>
-  </div>
+      </div>
+     
+ 
 </template>
 
 <script>
@@ -29,49 +32,19 @@ export default {
   components: {},
   data() {
     return {
-      active: 0
+      active: 0,
     };
   },
-  watch: {
-    active() {
-      switch (this.active) {
-        case 0:
-          this.$router.push("/home/list");
-          break;
-        case 1:
-          this.$router.push("/home/mail");
-          break;
-        case 2:
-          this.$router.push("/home/about");
-          break;
-      }
-    }
-  },
   created() {
-     switch (this.$route.path) {
-        case "/home/list":
-          this.active = 0;
-          break;
-        case "/home/mail":
-           this.active = 1;
-          break;
-        case "/home/find":
-          this.active = 2;
-          break;
-        // case "/home":
-        //   this.$router.push("/home/list");
-        //   break;
-        //  case "/":
-        //   this.$router.push("/home/list");
-        //   break;
-      }
-  },
+      
+  }
 };
 </script>
 <style scoped>
 .home {
   position: absolute;
   width: 100%;
+  min-height: 100vh;
 }
 .header {
   height: 1.533333rem;
@@ -87,6 +60,7 @@ export default {
   margin-right: 0.4rem;
   float: right;
 }
+
 .header-box span {
   font-size: 0.5rem;
 }

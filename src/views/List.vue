@@ -2,7 +2,8 @@
     
       <div class="body">
           <v-touch v-for="(v,index) in list"  :key="index" v-on:swipeleft="del(index)" v-on:swiperight="close(index)">
-                <van-row  class="list-box" :class="{'list-active':index==listIndex}">
+              <div @click="goto(index)">
+              <van-row  class="list-box"  :class="{'list-active':index==listIndex}">
                     <van-col class="header-list" span="8">
                         <img src="../../public/header.jpg" alt="">
                         <span class="user-name">用户名称</span>
@@ -13,6 +14,8 @@
 
                     </div>
                 </van-row>
+              </div>
+               
           </v-touch>
 
           
@@ -34,6 +37,13 @@ export default {
   methods: {
     del(index) {
       this.listIndex = index;
+    },
+    goto(index){
+      console.log("2")
+      this.$router.push('/msg')
+    },
+    delto(index){
+      this.list.splice(index,1)
     },
     close(index) {
         if(this.listIndex == index){
