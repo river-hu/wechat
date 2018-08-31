@@ -18,7 +18,19 @@
           </div>
         </div>
       </van-pull-refresh>
-      <div class="bottom"></div>
+      <div class="bottom">
+         <van-field
+          v-model="message"
+          type="textarea"
+           center
+         clearable
+          placeholder="请输入消息内容"
+          rows="1"
+          autosize
+        >
+        <van-button slot="button" @click="send" size="small" type="primary">发送</van-button>
+        </van-field>
+      </div>
   </div>
 </template>
 
@@ -29,27 +41,28 @@ export default {
     return {
     count: 0,
       isLoading: false,
+      message:'',
       msglist:[
         {
-          userimg:"https://avatar.csdn.net/0/B/E/3_huchangjiang0.jpg",
+          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
           content:`asdhkjashdkjashk <i>chehsijajaj</i>`,
           isuser:false,
 
         },
         {
-          userimg:"https://avatar.csdn.net/0/B/E/3_huchangjiang0.jpg",
+          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
           content:"消息的内容",
           isuser:false,
           
         },
         {
-          userimg:"https://avatar.csdn.net/0/B/E/3_huchangjiang0.jpg",
+          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
           content:"消息的内容",
           isuser:true,
           
         },
         {
-          userimg:"https://avatar.csdn.net/0/B/E/3_huchangjiang0.jpg",
+          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
           content:"消息的内容",
           isuser:false,
           
@@ -67,6 +80,20 @@ export default {
         this.isLoading = false;
         this.count++;
       }, 500);
+    },
+    send(){
+      let msg = this.message;
+      if(msg==''){
+         this.$toast('消息内容不能为空');
+         return;
+      }
+    
+        this.msglist.push({
+          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
+          content:msg,
+          isuser:false,
+        })
+        this.message = ''
     }
   }
 };
@@ -92,6 +119,7 @@ export default {
         text-align: left;
         .msg-box{
            margin-left: .3rem;
+          
         }
         .img2{
           display: none;
@@ -177,12 +205,13 @@ export default {
   }
   .bottom{
     width: 100vw;
-    height: 1rem;
     background: #fff;
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1000; 
+    border-top: 1px solid #eee;
+    box-shadow: -6px 0px 20px 7px #dedede;
   }
 }
 </style>
