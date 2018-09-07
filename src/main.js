@@ -12,6 +12,9 @@ import 'vant/lib/vant-css/index.css';
 
 import vueFeedback from 'vue-feedback'
 import VueTouch from 'vue-touch'
+
+Vue.prototype.url = "http://127.0.0.1:3000"
+
 Vue.use(VueTouch, {name: 'v-touch'})
 Vue.use(vueFeedback)
 Vue.use(Vant)

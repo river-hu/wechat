@@ -2,12 +2,12 @@
   <div class="msg">
       <div class="header">
         <van-icon @click="back" name="arrow-left" />
-        <span>用户1</span>
+        <span>{{name}}</span>
         <van-icon name="more-o" class="pos" />
       </div>
-      <van-pull-refresh class="bg" v-model="isLoading"  @refresh="onRefresh">
+      
         <div class="box">
-          <div class="list-box">
+          <div class="list-box" id="box">
             <div class="list" :class="{userlist:item.isuser,melist:!item.isuser}" v-for="(item,index) in msglist" v-bind:key="index">
               <img :src="item.userimg" class="img1" alt="">
               <div class="msg-box">  <div  :class="{user:item.isuser,me:!item.isuser}"></div>  <div v-html="item.content"></div> </div>
@@ -17,7 +17,7 @@
             
           </div>
         </div>
-      </van-pull-refresh>
+     
       <div class="bottom">
          <van-field
           v-model="message"
@@ -35,66 +35,92 @@
 </template>
 
 <script>
+import io from "socket.io-client";
 export default {
   name: "msg",
   data() {
     return {
-    count: 0,
+      count: 0,
       isLoading: false,
-      message:'',
-      msglist:[
-        {
-          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
-          content:`asdhkjashdkjashk <i>chehsijajaj</i>`,
-          isuser:false,
-
-        },
-        {
-          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
-          content:"消息的内容",
-          isuser:false,
-          
-        },
-        {
-          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
-          content:"消息的内容",
-          isuser:true,
-          
-        },
-        {
-          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
-          content:"消息的内容",
-          isuser:false,
-          
-        }
+      message: "",
+      ws: {},
+      name: "",
+      id:"",
+      msglist: [
+        
       ]
     };
+  },
+  watch: {
+    msglist: "scrollToBottom"
   },
   methods: {
     back() {
       this.$router.go(-1);
     },
-     onRefresh() {
+    scrollToBottom: function() {
+      this.$nextTick(() => {
+        var div = document.getElementById("box");
+
+        div.scrollTop = div.scrollHeight;
+      });
+    },
+    onRefresh() {
       setTimeout(() => {
-        this.$toast('刷新成功');
+        this.$toast("刷新成功");
         this.isLoading = false;
         this.count++;
       }, 500);
     },
-    send(){
+    sendMsg(msg) {
+      let name = this.id;
+      this.ws.emit("send.message", name,msg);
+    },
+    addMessage(from, msg) {
+       console.log(msg);
+      this.msglist.push({
+        userimg: "./header.jpg",
+        content: msg,
+        isuser: true
+      });
+    },
+    send() {
       let msg = this.message;
-      if(msg==''){
-         this.$toast('消息内容不能为空');
-         return;
+      if (msg == "") {
+        this.$toast("消息内容不能为空");
+        return;
       }
-    
-        this.msglist.push({
-          userimg:"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3965705221,2010595691&fm=27&gp=0.jpg",
-          content:msg,
-          isuser:false,
-        })
-        this.message = ''
+      this.sendMsg(msg);
+      this.msglist.push({
+        userimg: "./header.jpg",
+        content: msg,
+        isuser: false
+      });
+      this.message = "";
     }
+  },
+  created() {
+    let url = this.url;
+    this.ws = io.connect(url);
+    this.name = "4apeiwlszr";
+ 
+    let name = this.name;
+       console.log(name)
+    this.ws.on("connect", () => {
+      this.ws.emit("join", "server");
+    });
+    this.ws.on("send.message", (from, msg,id) => {
+      //检测私聊信息
+      if(from==name){
+          this.addMessage(from, msg);
+          this.id = id;
+      }
+    });
+     this.ws.on("all", (from, msg) => {
+      //检测私聊信息
+      this.addMessage(from, msg);
+    });
+    console.log(this.$route.query);
   }
 };
 </script>
@@ -102,82 +128,83 @@ export default {
 .msg {
   background: #fff;
   min-height: 100vh;
-  .box{
+  .box {
     width: 100vw;
-    margin-top: -1.7rem;
+    margin-top: 1.6rem;
     background: #f1f1f1;
     height: 100vh;
     box-sizing: border-box;
     padding-top: 1.7rem;
-    .list-box{
+    .list-box {
       width: 100%;
       position: absolute;
-      bottom: 2rem;
+      bottom: 0rem;
       max-height: 100vh;
+      overflow-y: scroll;
+      padding-bottom: 2rem;
+      box-sizing: border-box;
     }
-    .userlist{
-        text-align: left;
-        .msg-box{
-           margin-left: .3rem;
-          
-        }
-        .img2{
-          display: none;
-        }
+    .userlist {
+      text-align: left;
+      .msg-box {
+        margin-left: 0.3rem;
+      }
+      .img2 {
+        display: none;
+      }
     }
-    .melist{
+    .melist {
       text-align: right;
-       .msg-box{
-           margin-right: .3rem;
-        }
-        .img1{
-          display: none;
-        }
+      .msg-box {
+        margin-right: 0.3rem;
+      }
+      .img1 {
+        display: none;
+      }
     }
-    .list{
+    .list {
       width: 100%;
       color: #000;
-      font-size: .3rem;
+      font-size: 0.3rem;
       line-height: 1rem;
-      margin: .3rem 0;
-      img{
+      margin: 0.3rem 0;
+      img {
         width: 1rem;
         height: 1rem;
-        margin: .2rem;
+        margin: 0.2rem;
         vertical-align: top;
       }
-      .msg-box{
+      .msg-box {
         display: inline-block;
         vertical-align: top;
-        padding: 0 .2rem;
+        padding: 0 0.2rem;
         background: #fff;
         max-width: 7rem;
-        border:1px solid #eee;
+        border: 1px solid #eee;
         position: relative;
         border-radius: 5px;
-        .user{
+        .user {
           width: 0;
           height: 0;
           position: absolute;
-          border: .2rem solid transparent;
+          border: 0.2rem solid transparent;
           border-right-color: #fff;
-          left: -.4rem;
-          top: .3rem;
+          left: -0.4rem;
+          top: 0.3rem;
         }
-        .me{
-           width: 0;
+        .me {
+          width: 0;
           height: 0;
           position: absolute;
-          border: .2rem solid transparent;
+          border: 0.2rem solid transparent;
           border-left-color: #fff;
-          right: -.4rem;
-          top: .3rem;
+          right: -0.4rem;
+          top: 0.3rem;
         }
       }
-      
     }
   }
-  .bg{
+  .bg {
     width: 100vw;
   }
   .header {
@@ -188,6 +215,12 @@ export default {
     text-align: left;
     padding-left: 0.533333rem;
     font-size: 0.55rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
+    box-sizing: border-box;
     i {
       line-height: 1.6rem;
       vertical-align: middle;
@@ -203,13 +236,13 @@ export default {
       margin-right: 0.5rem;
     }
   }
-  .bottom{
+  .bottom {
     width: 100vw;
     background: #fff;
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 1000; 
+    z-index: 1000;
     border-top: 1px solid #eee;
     box-shadow: -6px 0px 20px 7px #dedede;
   }

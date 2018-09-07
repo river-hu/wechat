@@ -4,11 +4,11 @@
           <v-touch v-for="(v,index) in list"  :key="index" v-on:swipeleft="del(index)" v-on:swiperight="close(index)">
               <div @click="goto(index)">
               <van-row  class="list-box"  :class="{'list-active':index==listIndex}">
-                    <van-col class="header-list" span="8">
+                    <van-col class="header-list" span="13">
                         <img src="../../public/header.jpg" alt="">
-                        <span class="user-name">用户名称</span>
+                        <span class="user-name">{{v.name}}</span>
                     </van-col>
-                    <van-col span="8">&nbsp;</van-col>
+                    <van-col span="3">&nbsp;</van-col>
                     <van-col span="8" class="time-list">上午 08:30</van-col>
                     <div class="set icon-shanchu iconfont" v-fb @click="delto(index)">
 
@@ -18,19 +18,17 @@
                
           </v-touch>
 
-          
-   
-
       </div>
 
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "list",
   data() {
     return {
-      list: ["a", "b", "c"],
+      list: [],
       listIndex: -1
     };
   },
@@ -39,8 +37,8 @@ export default {
       this.listIndex = index;
     },
     goto(index){
-      console.log("2")
-      this.$router.push('/msg')
+      let name = this.list[index].name;
+      this.$router.push('/msg?name='+name);
     },
     delto(index){
       this.list.splice(index,1)
@@ -50,6 +48,14 @@ export default {
             this.listIndex = -1;
         }
     }
+  },
+  created(){
+    let url = this.url;
+    axios.get(url+"/socket").then((res)=>{
+      console.log(res.data)
+      this.list = res.data;
+     
+    })
   }
 };
 </script> 
