@@ -3,7 +3,7 @@
       <div class="header">
         <span class="title">图灵</span>
         <div class="header-box">
-          <span class="iconfont icon-jia"></span>
+          <span @click="getall" class="iconfont icon-jia"></span>
          
         </div>
       </div>
@@ -26,18 +26,28 @@
 
 <script>
 // @ is an alias to /src
-
 export default {
   name: "home",
   components: {},
   data() {
     return {
-      active: 0,
+      active: 0
     };
   },
-  created() {
-      
-  }
+  methods: {
+    getall() {
+      this.ws.emit("getuser");
+      this.ws.on("alluser", msg => {
+        this.list = [];
+        for (let i in msg) {
+          if (msg[i].name && msg[i].name != "server") {
+            this.list.push(msg[i]);
+          }
+        }
+      });
+    }
+  },
+  created() {}
 };
 </script>
 <style scoped>

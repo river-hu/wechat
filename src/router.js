@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import List from './views/List.vue'
 import Mail from './views/Mail.vue'
 import About from './views/About.vue'
+import Msg from './views/Msg.vue'
 
 Vue.use(Router)
 
@@ -40,7 +41,7 @@ export default new Router({
     {
       path:"/msg",
       name:'msg',
-      component: ()=>import('./views/Msg.vue')
+      component: Msg
     }
   ]
 })

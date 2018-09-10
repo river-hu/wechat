@@ -3,7 +3,7 @@
       <div class="header">
         <van-icon @click="back" name="arrow-left" />
         <span>{{name}}</span>
-        <van-icon name="more-o" class="pos" />
+        <van-icon  name="more-o" class="pos" />
       </div>
       
         <div class="box">
@@ -77,7 +77,6 @@ export default {
       this.ws.emit("send.message", name,msg);
     },
     addMessage(from, msg) {
-       console.log(msg);
       this.msglist.push({
         userimg: "./header.jpg",
         content: msg,
@@ -102,10 +101,10 @@ export default {
   created() {
     let url = this.url;
     this.ws = io.connect(url);
-    this.name = "4apeiwlszr";
+    this.name = this.$route.query.name;
+    this.id = this.$route.query.id;
  
     let name = this.name;
-       console.log(name)
     this.ws.on("connect", () => {
       this.ws.emit("join", "server");
     });
@@ -120,7 +119,6 @@ export default {
       //检测私聊信息
       this.addMessage(from, msg);
     });
-    console.log(this.$route.query);
   }
 };
 </script>

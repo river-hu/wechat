@@ -1,7 +1,7 @@
 <template>
     
       <div class="body">
-          <v-touch v-for="(v,index) in list"  :key="index" v-on:swipeleft="del(index)" v-on:swiperight="close(index)">
+          <v-touch v-for="(v,index) in userlist"  :key="index" v-on:swipeleft="del(index)" v-on:swiperight="close(index)">
               <div @click="goto(index)">
               <van-row  class="list-box"  :class="{'list-active':index==listIndex}">
                     <van-col class="header-list" span="13">
@@ -23,39 +23,48 @@
 </template>
 
 <script>
-import axios from 'axios';
+
 export default {
   name: "list",
   data() {
     return {
-      list: [],
-      listIndex: -1
+      listIndex: -1,
+      userlist:[]
     };
+  },
+  watch:{
+    list(){
+      this.userlist = this.list;
+    }
   },
   methods: {
     del(index) {
       this.listIndex = index;
     },
-    goto(index){
+    goto(index) {
       let name = this.list[index].name;
-      this.$router.push('/msg?name='+name);
+      let id = this.list[index].id;
+      this.$router.push("/msg?name=" + name+"&id="+id);
     },
-    delto(index){
-      this.list.splice(index,1)
+    delto(index) {
+      this.list.splice(index, 1);
     },
     close(index) {
-        if(this.listIndex == index){
-            this.listIndex = -1;
-        }
+      if (this.listIndex == index) {
+        this.listIndex = -1;
+      }
     }
   },
-  created(){
-    let url = this.url;
-    axios.get(url+"/socket").then((res)=>{
-      console.log(res.data)
-      this.list = res.data;
-     
-    })
+  created() {
+    this.ws.on("alluser", msg => {
+      this.list=[];
+      for (let i in msg) {
+        if (msg[i].name&&msg[i].name!="server") {
+            this.list.push(msg[i])
+        }
+      }
+      this.userlist = this.list;
+    });
   }
 };
 </script> 
@@ -72,7 +81,7 @@ export default {
   height: 1.892593rem;
   border-bottom: 1px solid rgb(217, 217, 217);
   padding-left: 0.361111rem;
-  padding-top: .15rem;
+  padding-top: 0.15rem;
   position: relative;
   transition: all 0.2s linear;
   box-sizing: border-box;
@@ -116,7 +125,7 @@ export default {
   right: -2rem;
   border-bottom: 1px solid rgb(217, 217, 217);
   font-size: 0.65rem;
-  transition: all .3s linear;
+  transition: all 0.3s linear;
 }
 </style>
 
